@@ -67,8 +67,23 @@ class _ResultsPageState extends State<_ResultsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Results')),
-      body: (_results == null ? _loading() : _list()),
+      body: Stack(
+        children: [
+          (_results == null ? _loading() : _list()),
+          SafeArea(
+            child: Container(
+              margin: EdgeInsets.all(10),
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black45,
+              ),
+              child: Center(child: BackButton()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
