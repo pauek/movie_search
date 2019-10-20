@@ -1,3 +1,3 @@
-# movie_search
+# Movie Search
 
 A sample Flutter project using TMDB API.
