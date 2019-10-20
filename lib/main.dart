@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:movie_search/pages/search_page.dart';
 
 Future<void> main() async {
   await DotEnv().load('.env');
@@ -12,9 +13,10 @@ class MovieSearchAp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: Scaffold(
-        body: Center(child: Text(DotEnv().env['apikey']),),
-      ),
+      routes: {
+        '/search': (_) => SearchPage(),
+      },
+      initialRoute: '/search',
     );
   }
 }
