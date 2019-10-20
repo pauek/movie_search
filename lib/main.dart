@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:movie_search/pages/results_page.dart';
 import 'package:movie_search/pages/search_page.dart';
 
 Future<void> main() async {
@@ -15,6 +16,7 @@ class MovieSearchAp extends StatelessWidget {
       title: 'Flutter Demo',
       routes: {
         '/search': (_) => SearchPage(),
+        '/results': (_) => ResultsPage(),
       },
       initialRoute: '/search',
     );

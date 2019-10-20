@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/api/tmdb.dart' as api;
-import 'package:movie_search/model/movie.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -23,10 +21,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _doSearch() {
-    print('Has buscado: "${_controller.text}"');
-    api.searchMovies(_controller.text).then((List<Movie> results) {
-      results.forEach(print);
-    });
+    final String query = _controller.text;
+    Navigator.of(context).pushNamed('/results', arguments: query);
   }
 
   @override
