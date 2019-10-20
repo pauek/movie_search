@@ -14,6 +14,9 @@ class MovieSearchAp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       routes: {
         '/search': (_) => SearchPage(),
         '/results': (_) => ResultsPage(),
