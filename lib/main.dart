@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:movie_search/pages/movie_page.dart';
 import 'package:movie_search/pages/results_page.dart';
 import 'package:movie_search/pages/search_page.dart';
 
@@ -30,6 +31,7 @@ class MovieSearchAp extends StatelessWidget {
       routes: {
         '/search': (_) => SearchPage(),
         '/results': (_) => ResultsPage(),
+        '/movie': (_) => MoviePage(),
       },
       initialRoute: '/search',
     );

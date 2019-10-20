@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/api/tmdb.dart' as api;
 import 'package:movie_search/model/movie.dart';
+import 'package:movie_search/widgets/loading.dart';
 
 class ResultsPage extends StatelessWidget {
   @override
@@ -31,9 +32,7 @@ class _ResultsPageState extends State<_ResultsPage> {
     super.initState();
   }
 
-  Widget _loading() => Center(
-        child: CircularProgressIndicator(),
-      );
+  Widget _loading() => Loading();
 
   Widget _list() => GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -45,9 +44,17 @@ class _ResultsPageState extends State<_ResultsPage> {
         itemBuilder: (BuildContext context, int index) {
           final Movie movie = _results[index];
           if (movie.posterPath != null) {
-            return Image.network(
-              api.imageUri(movie.posterPath),
-              fit: BoxFit.cover,
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  '/movie',
+                  arguments: movie.id,
+                );
+              },
+              child: Image.network(
+                api.imageUri(movie.posterPath),
+                fit: BoxFit.cover,
+              ),
             );
           }
           return Padding(
@@ -71,7 +78,7 @@ class _ResultsPageState extends State<_ResultsPage> {
     return Scaffold(
       body: Stack(
         children: [
-          (_results == null ? _loading() : _list()),
+          (_results == null ? Loading() : _list()),
           SafeArea(
             child: Container(
               margin: EdgeInsets.all(10),
@@ -89,3 +96,5 @@ class _ResultsPageState extends State<_ResultsPage> {
     );
   }
 }
+
+

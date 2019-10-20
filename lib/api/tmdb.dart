@@ -16,6 +16,26 @@ Future<List<Movie>> searchMovies(String query) async {
   return json['results'].map((x) => Movie.fromJson(x)).cast<Movie>().toList();
 }
 
+Future<Movie> getMovie(int id) async {
+  final apiKey = DotEnv().env['apikey'];
+  final movieUri = Uri.https(host, '/3/movie/$id', {"api_key": apiKey});
+  final creditsUri = Uri.https(host, '/3/movie/$id/credits', {"api_key": apiKey});
+  final responses = await Future.wait([
+    http.get(movieUri),
+    http.get(creditsUri),
+  ]);
+
+  final movieJson = jsonDecode(responses[0].body);
+  final creditsJson = jsonDecode(responses[1].body);
+
+  final Movie movie = Movie.fromJson(movieJson);
+  final credits = MovieCredits();
+  credits.addMovieJson(movieJson);
+  credits.addCreditsJson(creditsJson);
+  movie.credits = credits;
+  return movie;
+}
+
 String imageUri(String path) => Uri.https(imageHost, '/t/p/w500' + path, {
       "api_key": DotEnv().env['apikey'],
     }).toString();
