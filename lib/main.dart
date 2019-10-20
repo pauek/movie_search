@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_search/pages/results_page.dart';
 import 'package:movie_search/pages/search_page.dart';
 
+setDarkSystemNavigationBar() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.light.copyWith(
+      systemNavigationBarColor: Colors.black,
+    ),
+  );
+}
+
 Future<void> main() async {
   await DotEnv().load('.env');
+  setDarkSystemNavigationBar();
   runApp(MovieSearchAp());
 }
 
