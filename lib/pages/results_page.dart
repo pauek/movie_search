@@ -39,6 +39,8 @@ class _ResultsPageState extends State<_ResultsPage> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 2 / 3,
+          crossAxisSpacing: 2,
+          mainAxisSpacing: 2,
         ),
         itemBuilder: (BuildContext context, int index) {
           final Movie movie = _results[index];
