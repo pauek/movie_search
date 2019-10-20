@@ -35,11 +35,30 @@ class _ResultsPageState extends State<_ResultsPage> {
         child: CircularProgressIndicator(),
       );
 
-  Widget _list() => ListView.builder(
+  Widget _list() => GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 2 / 3,
+        ),
         itemBuilder: (BuildContext context, int index) {
           final Movie movie = _results[index];
-          return ListTile(
-            title: Text(movie.title),
+          if (movie.posterPath != null) {
+            return Image.network(
+              api.imageUri(movie.posterPath),
+              fit: BoxFit.cover,
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                movie.title,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
           );
         },
         itemCount: _results.length,
