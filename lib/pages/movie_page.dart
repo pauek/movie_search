@@ -7,47 +7,52 @@ class MoviePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int movieId = ModalRoute.of(context).settings.arguments;
-    return _MoviePage(id: movieId);
+    return Scaffold(
+      body: FutureBuilder(
+        future: api.getMovie(movieId),
+        builder: (context, AsyncSnapshot<Movie> snapshot) {
+          // TODO: if snapshot.hasError...
+          if (!snapshot.hasData) {
+            return Loading();
+          }
+          return _MoviePageBody(snapshot.data);
+        },
+      ),
+    );
   }
 }
 
-class _MoviePage extends StatefulWidget {
-  final int id;
-  _MoviePage({
-    @required this.id,
-  });
-
-  @override
-  _MoviePageState createState() => _MoviePageState();
-}
-
-class _MoviePageState extends State<_MoviePage> {
-  Movie _movie;
-
-  @override
-  void initState() {
-    api.getMovie(widget.id).then((movie) {
-      setState(() {
-        _movie = movie;
-      });
-    });
-    super.initState();
-  }
+class _MoviePageBody extends StatelessWidget {
+  final Movie movie;
+  const _MoviePageBody(this.movie);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _movie == null
-          ? Loading()
-          : Column(
-              children: <Widget>[
-                if (_movie != null)
-                  Image.network(api.imageUri(_movie.backdropPath)),
-                Text(_movie.title),
-                Text(_movie.overview),
-                Text(_movie.genres.join(', ')),
-              ],
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          title: Text(movie.title),
+          expandedHeight: 200,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  api.imageUri(movie.backdropPath),
+                ),
+              ),
             ),
+          ),
+        ),
+        // if (movie != null)
+        //   Image.network(api.imageUri(movie.backdropPath)),
+        SliverList(
+          delegate: SliverChildListDelegate([
+            Text(movie.title),
+            Text(movie.overview),
+            Text(movie.genres.join(', ')),
+          ]),
+        ),
+      ],
     );
   }
 }
