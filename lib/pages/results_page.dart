@@ -32,8 +32,6 @@ class _ResultsPageState extends State<_ResultsPage> {
     super.initState();
   }
 
-  Widget _loading() => Loading();
-
   Widget _list() => GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
