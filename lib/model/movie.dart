@@ -2,12 +2,14 @@
 class Actor {
   String name, character;
   int id, order;
+  String profilePath;
 
   Actor.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         character = json['character'],
         id = json['id'],
-        order = json['order'];
+        order = json['order'],
+        profilePath = json['profile_path'];
 }
 
 class MovieCredits {
@@ -28,7 +30,6 @@ class MovieCredits {
     directors = [];
     writers = [];
     for (var person in json['crew']) {
-      print(person);
       if (person['job'] == 'Director') {
         directors.add(person['name']);
       }

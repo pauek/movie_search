@@ -56,27 +56,39 @@ class _MoviePageBody extends StatelessWidget {
               children: <Widget>[
                 _Poster(),
                 SizedBox(width: 10),
-                Expanded(child: _Header()),
+                Expanded(child: _Details()),
               ],
             ),
           ),
         ),
         SliverList(
           delegate: SliverChildListDelegate([
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Text(
-                'Storyline'.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            _Header('Storyline'),
             _Overview(),
+            _Header('Cast'),
+            _Cast(),
           ]),
         )
       ],
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  final String text;
+  const _Header(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Text(
+        text.toUpperCase(),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }
@@ -92,7 +104,7 @@ class _Overview extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
+class _Details extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -126,6 +138,7 @@ class _InfoTable extends StatelessWidget {
   _info(String s) => Text(s,
       style: TextStyle(
         fontSize: fontSize,
+        color: Colors.grey[400],
       ));
 
   @override
@@ -216,7 +229,7 @@ class _Poster extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 2 / 3,
       child: Material(
-        elevation: 10,
+        elevation: 16,
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -239,6 +252,72 @@ class _Title extends StatelessWidget {
       style: TextStyle(
         fontSize: 26,
         fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+class _Cast extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Movie movie = Provider.of<Movie>(context);
+    return Container(
+      height: 220,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 16),
+        scrollDirection: Axis.horizontal,
+        itemCount: movie.credits.actors.length,
+        itemBuilder: (context, index) => _Actor(movie.credits.actors[index]),
+      ),
+    );
+  }
+}
+
+class _Actor extends StatelessWidget {
+  final Actor actor;
+  _Actor(this.actor);
+
+  _profileImage() {
+    if (actor.profilePath == null) {
+      return AssetImage('assets/unknown-user.png');
+    }
+    return NetworkImage(api.imageUri(actor.profilePath));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 84,
+      padding: EdgeInsets.fromLTRB(0, 16, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 2 / 3,
+            child: Material(
+              elevation: 5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: _profileImage(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            actor.name,
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+          ),
+          Text(
+            'as ${actor.character}',
+            style: TextStyle(fontSize: 10, color: Colors.grey),
+            overflow: TextOverflow.fade,
+          ),
+        ],
       ),
     );
   }
