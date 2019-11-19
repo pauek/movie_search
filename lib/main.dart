@@ -29,11 +29,10 @@ class MovieSearchAp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       routes: {
-        '/search': (_) => SearchPage(),
+        '/': (_) => SearchPage(),
         '/results': (_) => ResultsPage(),
         '/movie': (_) => MoviePage(),
       },
-      initialRoute: '/search',
     );
   }
 }
