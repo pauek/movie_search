@@ -29,6 +29,9 @@ class MovieCredits {
     writers = [];
     for (var person in json['crew']) {
       print(person);
+      if (person['job'] == 'Director') {
+        directors.add(person['name']);
+      }
     }
   }
 }
@@ -56,6 +59,7 @@ class Movie {
         voteCount = json['vote_count'],
         voteAverage = json['vote_average'],
         originalTitle = json['original_title'],
+        releaseDate = DateTime.parse(json['release_date']),
         originalLanguage = json['original_language'] {
           if (json.containsKey('genres')) {
             genres = json['genres'].map((g) => g['name']).cast<String>().toList();

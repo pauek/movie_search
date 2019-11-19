@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_search/api/tmdb.dart' as api;
 import 'package:movie_search/model/movie.dart';
 import 'package:movie_search/widgets/loading.dart';
@@ -41,33 +42,37 @@ class _MoviePageBody extends StatelessWidget {
                 image: NetworkImage(
                   api.imageUri(movie.backdropPath),
                 ),
+                fit: BoxFit.cover,
               ),
             ),
           ),
         ),
-        // if (movie != null)
-        //   Image.network(api.imageUri(movie.backdropPath)),
         SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+          child: Container(
+            height: 220,
+            padding: EdgeInsets.all(16.0),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: _Poster(),
-                ),
+                _Poster(),
                 SizedBox(width: 10),
-                Expanded(
-                  flex: 2,
-                  child: _Header(),
-                ),
+                Expanded(child: _Header()),
               ],
             ),
           ),
         ),
         SliverList(
           delegate: SliverChildListDelegate([
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                'Storyline'.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             _Overview(),
           ]),
         )
@@ -90,13 +95,117 @@ class _Overview extends StatelessWidget {
 class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        _Title(),
+        SizedBox(height: 5),
+        _Stars(),
+        SizedBox(height: 5),
+        _Genres(),
+        SizedBox(height: 24),
+        _InfoTable()
+      ],
+    );
+  }
+}
+
+class _InfoTable extends StatelessWidget {
+  final double fontSize = 12;
+
+  _label(String s) => Padding(
+        padding: const EdgeInsets.only(right: 8.0, bottom: 4.0),
+        child: Text(s,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w500,
+            )),
+      );
+
+  _info(String s) => Text(s,
+      style: TextStyle(
+        fontSize: fontSize,
+      ));
+
+  @override
+  Widget build(BuildContext context) {
     final Movie movie = Provider.of<Movie>(context);
-    return Column(children: <Widget>[
-      SizedBox(height: 16),
-      _Title(),
-      SizedBox(height: 8),
-      Text(movie.genres.join(', ')),
-    ]);
+    return Table(
+      columnWidths: {
+        0: IntrinsicColumnWidth(),
+      },
+      children: [
+        TableRow(children: [
+          _label('Director'),
+          _info(movie.credits.directors.join(', '))
+        ]),
+        TableRow(children: [
+          _label('Release'),
+          _info(DateFormat.yMMMMd().format(movie.releaseDate)),
+        ]),
+      ],
+    );
+  }
+}
+
+class _Stars extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Movie movie = Provider.of<Movie>(context);
+    return Row(
+      children: <Widget>[
+        Text(movie.voteAverage.toString(),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.yellow,
+            )),
+        SizedBox(width: 4),
+        for (int i = 2; i <= 10; i += 2)
+          Icon(_star(i - 2, i, movie.voteAverage),
+              size: 18, color: Colors.yellow),
+      ],
+    );
+  }
+
+  IconData _star(int low, int high, double rating) {
+    if (rating > high) {
+      return Icons.star;
+    } else if (rating > low) {
+      return Icons.star_half;
+    } else {
+      return Icons.star_border;
+    }
+  }
+}
+
+class _Genres extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Movie movie = Provider.of<Movie>(context);
+    return Wrap(
+      children: <Widget>[
+        for (var genre in movie.genres) _genre(genre),
+      ],
+    );
+  }
+
+  Widget _genre(String text) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(6, 4, 6, 3),
+      margin: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(30),
+        borderRadius: BorderRadius.all(Radius.circular(3)),
+      ),
+      child: Text(
+        text.toUpperCase().trim(),
+        style: TextStyle(
+          fontSize: 9,
+        ),
+      ),
+    );
   }
 }
 
