@@ -15,13 +15,13 @@ setDarkSystemNavigationBar() {
 }
 
 Future<void> main() async {
-  await DotEnv().load('.env');
+  await dotenv.load(fileName: '.env');
   await initializeDateFormatting("es_ES", null);
   setDarkSystemNavigationBar();
-  runApp(MovieSearchAp());
+  runApp(MovieSearchApp());
 }
 
-class MovieSearchAp extends StatelessWidget {
+class MovieSearchApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
